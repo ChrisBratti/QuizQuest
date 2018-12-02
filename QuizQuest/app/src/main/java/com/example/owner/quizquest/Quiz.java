@@ -2,12 +2,14 @@ package com.example.owner.quizquest;
 
 import android.widget.PopupWindow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Quiz {
-
+public class Quiz implements Serializable {
+    private ArrayList<String> questionsText;
     private HashMap<String, Answer> questions;
+    private ArrayList<String> questionsAnswered;
 
     //private ArrayList<String> questions;
     //private ArrayList<String> answers;
@@ -22,7 +24,7 @@ public class Quiz {
         }
     }
 
-    public Answer getAnswer(String question){
+    public Answer getAnswerChoices(String question){
         Answer answer = null;
         if(questions.containsKey(question)){
             answer = questions.get(question);
@@ -76,6 +78,30 @@ public class Quiz {
         }else{
             return false;
         }
+    }
+
+    public boolean addAnswerChoice(String question, String answer){
+        if(questions.containsKey(question)){
+            Answer mAnswer = questions.get(question);
+            mAnswer.addAnswer(answer);
+            questions.put(question, mAnswer);
+            return true;
+        }else
+            return false;
+    }
+
+    public String getNextQuestion(){
+        boolean found = false;
+        String question = null;
+        while(!found){
+            int rand = (int)(Math.random() * questionsText.size());
+            question = questionsText.get(rand);
+            if(!questionsAnswered.contains(question)){
+                found = true;
+            }
+        }
+
+        return question;
     }
 
 
