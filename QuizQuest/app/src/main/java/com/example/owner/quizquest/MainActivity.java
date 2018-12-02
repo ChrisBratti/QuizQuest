@@ -22,12 +22,16 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener{
+    public final static String BASE_URL = "https://quizquest-dharris0701.c9users.io/";
+    public final static String VERIFY_URL = "api/verifyLoginInfo/";
+    public final static String GET_CLASS_URL = "api/getClassesForStudent/";
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
     ListView classDisplay;
     TextView nameDisplay;
     TextView navViewName;
     private DrawerLayout drawerLayout;
+    private String hi = "";
 
     @Override
     protected void onStart() {
