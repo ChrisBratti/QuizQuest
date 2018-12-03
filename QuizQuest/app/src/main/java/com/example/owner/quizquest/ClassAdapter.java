@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -84,6 +85,17 @@ public class ClassAdapter extends ArrayAdapter<Class> {
         TextView classCode;
         ImageButton delete;
         ImageButton edit;
+
+        public void showButtons(){
+            delete.setVisibility(View.VISIBLE);
+            delete.setEnabled(true);
+            edit.setVisibility(View.VISIBLE);
+            edit.setEnabled(true);
+        }
     }
+
+
+
+
 
 }

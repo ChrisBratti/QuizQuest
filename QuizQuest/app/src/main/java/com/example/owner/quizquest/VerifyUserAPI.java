@@ -41,7 +41,6 @@ public class VerifyUserAPI extends AsyncTask<String, Void, Boolean> {
         Log.d("Test", url);
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("c9.live.ide", "5QGJI7ZYuUviK0XpD08bX5CtU7lha%2BpPH%2B8vk")
                 .build();
         String jsonString = null;
         try {
@@ -59,7 +58,7 @@ public class VerifyUserAPI extends AsyncTask<String, Void, Boolean> {
         if(json == null){return false;}
         try{
             JSONObject root = new JSONObject(json);
-            boolean valid = root.getBoolean("valid");
+            boolean valid = root.getBoolean("Verified");
             return valid;
         }catch(JSONException e){
             e.printStackTrace();

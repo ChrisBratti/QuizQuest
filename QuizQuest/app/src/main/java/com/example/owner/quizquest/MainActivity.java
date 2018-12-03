@@ -22,11 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener{
-    public final static String BASE_URL = "https://quizquest-dharris0701.c9users.io/";
-    public final static String VERIFY_URL = "api/verifyLoginInfo/";
+    public final static String BASE_URL = "https://sleepy-sea-55393.herokuapp.com/";
+    public final static String VERIFY_URL = "api/verifyLogin/";
     public final static String GET_CLASS_URL = "api/getClassesForStudent/";
-    FirebaseUser currentUser;
-    FirebaseAuth mAuth;
     ListView classDisplay;
     TextView nameDisplay;
     TextView navViewName;
@@ -36,11 +34,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
     }
 
     ArrayList<Class> classes;
@@ -61,10 +54,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         View headerView = navigationView.getHeaderView(0);
         TextView navName = headerView.findViewById(R.id.tvMenuName);
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-
-        navName.setText(currentUser.getDisplayName());
+        navName.setText("Chris Bratti");
 
         MainFragment f = new MainFragment();
         getFragmentManager().beginTransaction()

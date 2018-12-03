@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -57,8 +58,6 @@ public class MainFragment extends Fragment {
     ArrayList<Class> classes;
     TextView nameDisplay;
     Button logOut;
-    FirebaseUser currentUser;
-    private DatabaseReference mDatabase;
     private ListView listView;
     private ClassAdapter adapter;
     ValueEventListener postListener;
@@ -75,31 +74,13 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         classes = new ArrayList<Class>();
+        classes = addClasses(classes);
 
-        postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnapshot snapshot = dataSnapshot.child(currentUser.getUid()).child("Classes");
-                for(DataSnapshot postSnapshot : snapshot.getChildren()){
-                    classes.add(postSnapshot.getValue(Class.class));
-                }
+        listView = getActivity().findViewById(R.id.list_view);
 
-                listView = getActivity().findViewById(R.id.list_view);
-
-                adapter = new ClassAdapter(getContext(), R.layout.layout_view, classes);
-                listView.setAdapter(adapter);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mDatabase.addListenerForSingleValueEvent(postListener);
+        adapter = new ClassAdapter(getContext(), R.layout.layout_view, classes);
+        listView.setAdapter(adapter);
 
     }
 
@@ -131,12 +112,9 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         nameDisplay = getActivity().findViewById(R.id.tvNameMain);
         logOut = getActivity().findViewById(R.id.btnLogout);
-        nameDisplay.setText(currentUser.getDisplayName());
+        nameDisplay.setText("Chris Bratti");
         addClass = getActivity().findViewById(R.id.btnAddClass);
         classes = new ArrayList<Class>();
 
@@ -150,16 +128,6 @@ public class MainFragment extends Fragment {
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AuthUI.getInstance()
-                        .signOut(getActivity())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getActivity(), "Successfully logged out", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                        });
             }
         });
 
@@ -173,7 +141,6 @@ public class MainFragment extends Fragment {
     }
 
     public void showPopup(View anchorView){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         View popupView = getActivity().getLayoutInflater().inflate(R.layout.layout_add_class, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, ActionBar.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -209,26 +176,6 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Log.d("Test", "Add class was clicked");
                 final String code = classCode.getText().toString();
-
-                ValueEventListener postListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Class mClass = dataSnapshot.child("Classes").child(code).getValue(Class.class);
-                        if(mClass == null){
-                            Toast.makeText(getContext(), "That class code does not exist", Toast.LENGTH_SHORT).show();
-                        }else{
-                            mDatabase.child(currentUser.getUid()).child("Classes").child(code).setValue(mClass);
-                            classes.add(mClass);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                };
-                mDatabase.addListenerForSingleValueEvent(postListener);
                 popupWindow.dismiss();
             }
         });
