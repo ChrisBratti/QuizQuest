@@ -22,14 +22,17 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener{
-    public final static String BASE_URL = "https://sleepy-sea-55393.herokuapp.com/";
+    public final static String BASE_URL = "https://shielded-meadow-34727.herokuapp.com/";
     public final static String VERIFY_URL = "api/verifyLogin/";
     public final static String GET_CLASS_URL = "api/getClassesForStudent/";
+    public final static String GET_USER_INFO_URL = "api/get_user_info_API/";
+    public final static String GET_CLASS_QUIZZES_URL = "api/get_class_quiz_ids_API/";
+
     ListView classDisplay;
     TextView nameDisplay;
     TextView navViewName;
     private DrawerLayout drawerLayout;
-    private String hi = "";
+    public String name;
 
     @Override
     protected void onStart() {
@@ -54,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         View headerView = navigationView.getHeaderView(0);
         TextView navName = headerView.findViewById(R.id.tvMenuName);
 
+        name = getIntent().getStringExtra(LoginActivity.NAME_KEY);
 
-        navName.setText("Chris Bratti");
+        navName.setText(name);
 
         MainFragment f = new MainFragment();
         getFragmentManager().beginTransaction()
@@ -85,12 +89,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
 
         if(menuItem.getItemId() == R.id.nav_profile){
             ProfileFragment f = new ProfileFragment();
-            Log.d("Test", "Profile was chosen");
             getFragmentManager().beginTransaction()
                     .replace(R.id.FragmentDisplay, f, "profile_fragment")
                     .commit();
         }else if(menuItem.getItemId() == R.id.nav_home){
-            Log.d("Test", "Home was chosen");
             MainFragment f = new MainFragment();
             getFragmentManager().beginTransaction()
                     .replace(R.id.FragmentDisplay, f, "main_fragment")
@@ -104,5 +106,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     private void setNavigationViewListner(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public String getName(){
+        return name;
     }
 }

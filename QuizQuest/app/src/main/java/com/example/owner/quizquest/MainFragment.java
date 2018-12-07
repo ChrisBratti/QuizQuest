@@ -60,6 +60,7 @@ public class MainFragment extends Fragment {
     Button logOut;
     private ListView listView;
     private ClassAdapter adapter;
+    private String name;
     ValueEventListener postListener;
     Class newClass;
     FloatingActionButton addClass;
@@ -112,12 +113,13 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        MainActivity activity = (MainActivity)getActivity();
         nameDisplay = getActivity().findViewById(R.id.tvNameMain);
         logOut = getActivity().findViewById(R.id.btnLogout);
         nameDisplay.setText("Chris Bratti");
         addClass = getActivity().findViewById(R.id.btnAddClass);
         classes = new ArrayList<Class>();
-
+        name = activity.getName();
 
         TextView nameDisplay = getActivity().findViewById(R.id.tvNameProfile);
 

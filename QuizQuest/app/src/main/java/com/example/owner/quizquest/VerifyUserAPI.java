@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class VerifyUserAPI extends AsyncTask<String, Void, Boolean> {
+public class VerifyUserAPI extends AsyncTask<String, Void, String> {
     private DataInterface dataInterface;
 
     public VerifyUserAPI(DataInterface data){
@@ -26,18 +26,31 @@ public class VerifyUserAPI extends AsyncTask<String, Void, Boolean> {
 
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-        dataInterface.sendVerified(aBoolean);
+    protected void onPostExecute(String string) {
+        super.onPostExecute(string);
+        dataInterface.sendVerified(string);
     }
 
     @Override
-    protected Boolean doInBackground(String... strings) {
-        String email = strings[0];
-        String password = strings[1];
+    protected String doInBackground(String... strings) {
+        String url = null;
         OkHttpClient client = new OkHttpClient();
-        String url = MainActivity.BASE_URL + MainActivity.VERIFY_URL + email
-                + "/" + password + "/";
+        if(strings[0].equals(MainActivity.VERIFY_URL)){
+            String email = strings[1];
+            String password = strings[2];
+            url = MainActivity.BASE_URL + MainActivity.VERIFY_URL + email
+                    + "/" + password + "/";
+        }else if(strings[0].equals(MainActivity.GET_USER_INFO_URL)){
+            String email = strings[1];
+            url = MainActivity.BASE_URL + strings[0] + email;
+        }else if(strings[0].equals(MainActivity.GET_CLASS_QUIZZES_URL)){
+            String classCode = strings[1];
+            url = MainActivity.BASE_URL + strings[0] + classCode;
+        }else if(strings[0].equals(MainActivity.GET_CLASS_URL)){
+            String email = strings[1];
+            url = MainActivity.BASE_URL + strings[0] + email;
+        }
+
         Log.d("Test", url);
         Request request = new Request.Builder()
                 .url(url)
@@ -50,23 +63,48 @@ public class VerifyUserAPI extends AsyncTask<String, Void, Boolean> {
         }catch(IOException e){
             e.printStackTrace();
         }
-        return validateUser(jsonString);
+        if(strings[0].equals(MainActivity.GET_USER_INFO_URL)){
+            return getName(jsonString);
+        }else{
+            return validateUser(jsonString);
+        }
+
     }
 
 
-    private boolean validateUser(String json){
-        if(json == null){return false;}
+    private String validateUser(String json){
+        if(json == null){return "false";}
         try{
             JSONObject root = new JSONObject(json);
             boolean valid = root.getBoolean("Verified");
-            return valid;
+            return Boolean.toString(valid);
         }catch(JSONException e){
             e.printStackTrace();
         }
-        return false;
+        return "false";
+    }
+
+    private String getName(String json){
+        String fullName = null;
+        if(json == null){return null;}
+        try{
+            JSONObject root = new JSONObject(json);
+            boolean exists = root.getBoolean("exists");
+            if(!exists){
+                return null;
+            }
+            String firstName = root.getString("f_name");
+            String lastName = root.getString("l_name");
+            fullName = firstName + lastName;
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return fullName;
     }
 
     public static interface DataInterface{
-        public void sendVerified(boolean valid);
+        public void sendVerified(String valid);
+        public void sendName(String name);
     }
 }

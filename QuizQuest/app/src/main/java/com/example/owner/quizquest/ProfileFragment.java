@@ -28,9 +28,9 @@ public class ProfileFragment extends Fragment {
     TextView nameDisplay;
     TextView fullNameDisplay;
     TextView userNameDisplay;
-    FirebaseUser currentUser;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private String name;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -38,14 +38,7 @@ public class ProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser == null){
 
-        }
-    }
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -88,14 +81,15 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        MainActivity activity = (MainActivity)getActivity();
         nameDisplay = getActivity().findViewById(R.id.tvNameProfile);
         fullNameDisplay = getActivity().findViewById(R.id.tvEditFullName);
         userNameDisplay = getActivity().findViewById(R.id.tvEditUsername);
+        name = activity.getName();
 
-        nameDisplay.setText(currentUser.getDisplayName());
-        fullNameDisplay.setText(currentUser.getDisplayName());
-        userNameDisplay.setText(currentUser.getEmail());
+        nameDisplay.setText(name);
+        fullNameDisplay.setText(name);
+        userNameDisplay.setText("email");
     }
 
 

@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.DataInterface{
     private static final int RC_SIGN_IN = 0000;
+    public static final String NAME_KEY = "name";
     EditText email;
     EditText password;
     Button login;
@@ -26,8 +27,9 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
+
+        setContentView(R.layout.activity_login);
         signup = findViewById(R.id.btnSignup);
         login = findViewById(R.id.btnLogin);
         email = findViewById(R.id.etEmail);
@@ -44,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
                     progressDialog= new ProgressDialog(LoginActivity.this);
                     progressDialog.setTitle("Logging in...");
                     progressDialog.show();
-                    new VerifyUserAPI(LoginActivity.this).execute(email.getText().toString(), password.getText().toString());
+                    new VerifyUserAPI(LoginActivity.this).execute(MainActivity.VERIFY_URL, email.getText().toString(), password.getText().toString());
                 }
 
             }
@@ -60,27 +62,31 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
 
     }
 
-   private void updateUI(FirebaseUser user){
-        if(user == null){
-            return;
-        }else{
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-   }
-
     @Override
-    public void sendVerified(boolean valid) {
+    public void sendVerified(String valid) {
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
         }
-        if(valid){
+        if(Boolean.parseBoolean(valid)){
+            new VerifyUserAPI(LoginActivity.this).execute(MainActivity.GET_USER_INFO_URL, email.getText().toString());
+        }else{
+            Toast.makeText(this, "Could not validate user", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void sendName(String name) {
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+
+        if(name != null){
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(NAME_KEY, name);
             startActivity(intent);
             finish();
         }else{
-            Toast.makeText(this, "Could not validate user", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Could not validate", Toast.LENGTH_SHORT).show();
         }
     }
 }
