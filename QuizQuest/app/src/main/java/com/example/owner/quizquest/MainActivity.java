@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener{
     public final static String BASE_URL = "https://shielded-meadow-34727.herokuapp.com/";
-    public final static String VERIFY_URL = "api/verifyLogin/";
+    public final static String VERIFY_URL = "api/verify_login_API/";
     public final static String GET_CLASS_URL = "api/getClassesForStudent/";
     public final static String GET_USER_INFO_URL = "api/get_user_info_API/";
     public final static String GET_CLASS_QUIZZES_URL = "api/get_class_quiz_ids_API/";

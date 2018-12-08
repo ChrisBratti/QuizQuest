@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
         if(Boolean.parseBoolean(valid)){
             new VerifyUserAPI(LoginActivity.this).execute(MainActivity.GET_USER_INFO_URL, email.getText().toString());
         }else{
+            Log.d("Test", "user not validated");
             Toast.makeText(this, "Could not validate user", Toast.LENGTH_SHORT).show();
         }
     }
@@ -79,6 +81,7 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
         }
+        Log.d("Test", "send name has been called");
 
         if(name != null){
             Intent intent = new Intent(this, MainActivity.class);
@@ -86,6 +89,7 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
             startActivity(intent);
             finish();
         }else{
+            Log.d("Test", "name is null");
             Toast.makeText(this, "Could not validate", Toast.LENGTH_SHORT).show();
         }
     }

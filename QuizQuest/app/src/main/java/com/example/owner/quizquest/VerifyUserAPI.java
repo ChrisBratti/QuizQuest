@@ -11,12 +11,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class VerifyUserAPI extends AsyncTask<String, Void, String> {
+public class VerifyUserAPI extends AsyncTask<String, Void, ArrayList<String>> {
     private DataInterface dataInterface;
 
     public VerifyUserAPI(DataInterface data){
@@ -26,15 +27,21 @@ public class VerifyUserAPI extends AsyncTask<String, Void, String> {
 
 
     @Override
-    protected void onPostExecute(String string) {
-        super.onPostExecute(string);
-        dataInterface.sendVerified(string);
+    protected void onPostExecute(ArrayList<String> strings) {
+        super.onPostExecute(strings);
+        if(strings.get(0).equals(MainActivity.GET_USER_INFO_URL)){
+            dataInterface.sendName(strings.get(1));
+        }else{
+            dataInterface.sendVerified(strings.get(1));
+        }
+
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected ArrayList<String> doInBackground(String... strings) {
         String url = null;
         OkHttpClient client = new OkHttpClient();
+        Log.d("Test", strings[0]);
         if(strings[0].equals(MainActivity.VERIFY_URL)){
             String email = strings[1];
             String password = strings[2];
@@ -64,9 +71,17 @@ public class VerifyUserAPI extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
         if(strings[0].equals(MainActivity.GET_USER_INFO_URL)){
-            return getName(jsonString);
+            Log.d("Test", "Strings is get user info url");
+            ArrayList returning = new ArrayList<>();
+            returning.add(strings[0]);
+            returning.add(getName(jsonString));
+            return returning;
         }else{
-            return validateUser(jsonString);
+            Log.d("Test", "Strings is validate user url");
+            ArrayList returning = new ArrayList<>();
+            returning.add(strings[0]);
+            returning.add(validateUser(jsonString));
+            return returning;
         }
 
     }
@@ -95,11 +110,11 @@ public class VerifyUserAPI extends AsyncTask<String, Void, String> {
             }
             String firstName = root.getString("f_name");
             String lastName = root.getString("l_name");
-            fullName = firstName + lastName;
+            fullName = firstName + " " + lastName;
         }catch(JSONException e){
             e.printStackTrace();
         }
-
+        Log.d("Test", "getName: " + fullName);
         return fullName;
     }
 

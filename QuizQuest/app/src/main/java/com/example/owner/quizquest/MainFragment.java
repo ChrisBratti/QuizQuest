@@ -116,12 +116,11 @@ public class MainFragment extends Fragment {
         MainActivity activity = (MainActivity)getActivity();
         nameDisplay = getActivity().findViewById(R.id.tvNameMain);
         logOut = getActivity().findViewById(R.id.btnLogout);
-        nameDisplay.setText("Chris Bratti");
+        nameDisplay.setText(activity.getName());
         addClass = getActivity().findViewById(R.id.btnAddClass);
         classes = new ArrayList<Class>();
         name = activity.getName();
 
-        TextView nameDisplay = getActivity().findViewById(R.id.tvNameProfile);
 
         HashMap<String, String> questions = new HashMap<String,String>();
         addQuestions(questions);
