@@ -2,6 +2,7 @@ package com.example.owner.quizquest;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -61,10 +62,10 @@ public class ClassAdapter extends ArrayAdapter<Class> {
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        if(aClass.getNickName() == null){
-            viewHolder.nickName.setVisibility(View.INVISIBLE);
-        }else{
-            viewHolder.nickName.setText(aClass.getNickName());
+
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.PREF_NAME, 0);
+        if(settings.contains(aClass.getName())){
+            viewHolder.nickName.setText(settings.getString(aClass.getName(), ""));
         }
 
         viewHolder.className.setText(aClass.getName());
@@ -131,6 +132,10 @@ public class ClassAdapter extends ArrayAdapter<Class> {
                 nickname = classNickname.getText().toString();
                 aClass.setNickName(nickname);
                 ClassAdapter.this.notifyDataSetChanged();
+                SharedPreferences settings = context.getSharedPreferences(MainActivity.PREF_NAME,0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(aClass.getName(), nickname);
+                editor.apply();
                 popupWindow.dismiss();
             }
         });
