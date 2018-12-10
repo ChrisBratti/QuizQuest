@@ -27,12 +27,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     public final static String GET_CLASS_URL = "api/getClassesForStudent/";
     public final static String GET_USER_INFO_URL = "api/get_user_info_API/";
     public final static String GET_CLASS_QUIZZES_URL = "api/get_class_quiz_ids_API/";
+    public final static String GET_STUDENT_CLASSES_URL = "api/get_student_classes_API/";
 
     ListView classDisplay;
     TextView nameDisplay;
     TextView navViewName;
     private DrawerLayout drawerLayout;
-    public String name;
+    private String name;
+    private String email;
 
     @Override
     protected void onStart() {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         TextView navName = headerView.findViewById(R.id.tvMenuName);
 
         name = getIntent().getStringExtra(LoginActivity.NAME_KEY);
+        email = getIntent().getStringExtra(LoginActivity.EMAIL_KEY);
 
         navName.setText(name);
 
@@ -111,4 +114,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     public String getName(){
         return name;
     }
+
+    public String getEmail() {return email;}
 }

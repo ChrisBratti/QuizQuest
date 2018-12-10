@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.DataInterface{
     private static final int RC_SIGN_IN = 0000;
     public static final String NAME_KEY = "name";
+    public static final String EMAIL_KEY = "email";
     EditText email;
     EditText password;
     Button login;
@@ -86,6 +87,7 @@ public class LoginActivity extends AppCompatActivity implements VerifyUserAPI.Da
         if(name != null){
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(NAME_KEY, name);
+            intent.putExtra(EMAIL_KEY, email.getText().toString());
             startActivity(intent);
             finish();
         }else{

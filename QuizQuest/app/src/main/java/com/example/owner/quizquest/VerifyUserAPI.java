@@ -21,7 +21,6 @@ public class VerifyUserAPI extends AsyncTask<String, Void, ArrayList<String>> {
     private DataInterface dataInterface;
 
     public VerifyUserAPI(DataInterface data){
-
         this.dataInterface = data;
     }
 
@@ -41,7 +40,6 @@ public class VerifyUserAPI extends AsyncTask<String, Void, ArrayList<String>> {
     protected ArrayList<String> doInBackground(String... strings) {
         String url = null;
         OkHttpClient client = new OkHttpClient();
-        Log.d("Test", strings[0]);
         if(strings[0].equals(MainActivity.VERIFY_URL)){
             String email = strings[1];
             String password = strings[2];
@@ -58,7 +56,6 @@ public class VerifyUserAPI extends AsyncTask<String, Void, ArrayList<String>> {
             url = MainActivity.BASE_URL + strings[0] + email;
         }
 
-        Log.d("Test", url);
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -66,18 +63,15 @@ public class VerifyUserAPI extends AsyncTask<String, Void, ArrayList<String>> {
         try {
             Response response = client.newCall(request).execute();
             jsonString = response.body().string();
-            Log.d("Test", jsonString);
         }catch(IOException e){
             e.printStackTrace();
         }
         if(strings[0].equals(MainActivity.GET_USER_INFO_URL)){
-            Log.d("Test", "Strings is get user info url");
             ArrayList returning = new ArrayList<>();
             returning.add(strings[0]);
             returning.add(getName(jsonString));
             return returning;
         }else{
-            Log.d("Test", "Strings is validate user url");
             ArrayList returning = new ArrayList<>();
             returning.add(strings[0]);
             returning.add(validateUser(jsonString));
@@ -114,7 +108,6 @@ public class VerifyUserAPI extends AsyncTask<String, Void, ArrayList<String>> {
         }catch(JSONException e){
             e.printStackTrace();
         }
-        Log.d("Test", "getName: " + fullName);
         return fullName;
     }
 

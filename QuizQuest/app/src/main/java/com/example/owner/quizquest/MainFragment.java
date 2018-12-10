@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +53,7 @@ import java.util.HashMap;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements GetClassesAPI.DataInterface{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     ArrayList<Class> classes;
@@ -65,6 +66,8 @@ public class MainFragment extends Fragment {
     Class newClass;
     FloatingActionButton addClass;
     EditText classCode;
+    MainActivity activity;
+    ProgressDialog progressDialog;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -75,13 +78,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        activity = (MainActivity)getActivity();
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Loading classes...");
+        progressDialog.show();
+
         classes = new ArrayList<Class>();
-        classes = addClasses(classes);
-
-        listView = getActivity().findViewById(R.id.list_view);
-
-        adapter = new ClassAdapter(getContext(), R.layout.layout_view, classes);
-        listView.setAdapter(adapter);
+        new GetClassesAPI(this).execute(activity.getEmail());
+        //classes = addClasses(classes);
 
     }
 
@@ -210,13 +215,14 @@ public class MainFragment extends Fragment {
         return questions;
     }
 
+    /*
     private ArrayList<Class> addClasses(ArrayList<Class> classes){
         classes.add(new Class("Software Development Projects", "ITCS-4155", "Bojan Cukic", "0000"));
         classes.add(new Class("Mobile App Development", "ITCS- 4180", "Enas Al Kawasmi", "0001"));
         classes.add(new Class("Artificial Intelligence in Computer Games", "ITCS-4236", "Danny Jugan", "0011"));
         classes.add(new Class("Visualization and Visual Communication", "ITCS-4123", "Aidong Lu", "0111"));
         return classes;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -258,6 +264,18 @@ public class MainFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    @Override
+    public void sendClasses(ArrayList<Class> classes) {
+        this.classes = classes;
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        listView = getActivity().findViewById(R.id.list_view);
+        adapter = new ClassAdapter(getContext(), R.layout.layout_view, classes);
+        listView.setAdapter(adapter);
     }
 
     /**
